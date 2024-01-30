@@ -1,0 +1,3 @@
+[submodule "prometheusCV"]
+	path = prometheusCV
+	url = https://github.com/chrisby/prometheusCV.git
