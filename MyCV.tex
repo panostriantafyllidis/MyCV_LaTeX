@@ -1,0 +1,82 @@
+\documentclass{template}
+% Set the page layout
+\usepackage[a4paper, total={7in, 10in}, top=1cm]{geometry}
+% Define custom colors
+\usepackage{xcolor}
+\definecolor{highlight}{HTML}{283559}
+\definecolor{highlight2}{HTML}{1A2640}
+\definecolor{link}{HTML}{5C6273}
+% Lorem Ipsum text generator
+\usepackage{lipsum}
+% Formatting for SI units
+\usepackage{siunitx}
+% Font Awesome icons
+\usepackage{fontawesome5}
+% Formatting for ordinal numbers
+\usepackage[super]{nth}
+% Multiple columns layout
+\usepackage{multicol}
+% Hyperlinks with custom colors
+\usepackage[
+    colorlinks = true,
+    linkcolor = highlight,
+    urlcolor = highlight,
+    citecolor= highlight
+]{hyperref}
+% Custom fonts
+\usepackage{fontspec}
+% Fancy headers and footers
+\usepackage{fancyhdr}
+% Bookmarks in the PDF
+\usepackage{bookmark}
+
+% Set the main font
+\setmainfont[
+    BoldFont=Calibri Bold,
+    ItalicFont=Calibri Italic,
+    BoldItalicFont=Calibri Bold Italic
+]{Calibri}
+\newfontfamily\CalibriLight{Calibri Light}
+\newcommand\textlf[1]{{\CalibriLight#1}}
+% Command for highlighting text with custom color
+\newcommand{\highlight}[1]{\textcolor{highlight}{\textbf{#1}}}
+
+% Command for adding an editor's comment
+\newcommand{\ec}{\textsuperscript{\textdagger}}
+% Clear all header and footer settings
+\fancyhf{}
+% Remove the header rule
+\renewcommand{\headrulewidth}{0pt}
+% Remove the footer rule
+\renewcommand{\footrulewidth}{0pt}
+
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=-0.1cm}
+
+\usepackage{ragged2e}
+
+
+\begin{document}
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+\centering
+\input{title.tex}
+\\
+.
+\\
+\justify
+Graduate of Business and IT currently studying MSc in Computer Science, with the target of acquiring employment in the fields of software development, security, and IT after graduation. Background includes independent external study for the development of software skills, strong experience with group projects of academic and professional nature, and a military service utilised under the IT department.
+\section{Education}
+\input{education.tex}
+
+\section{Employment \& Work Experience}
+\input{work.tex}
+
+\section{Hobbies, Interests \& Achievements}
+\input{interests.tex}
+
+\section{Skills}
+\input{skills.tex}
+
+\end{document}
