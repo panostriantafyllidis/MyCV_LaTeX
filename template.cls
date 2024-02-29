@@ -31,7 +31,7 @@
 
 %Version 2.0
 \newcommand{\datedlocatedsubsection}[4]{%
-\noindent\underline{#1}\ \textbf{#3} \hfill \textbf{#2}\\
+\noindent\underline{#1}\ \textbf{  |  }  \textbf{#3} \hfill \textbf{#2}\\
 \vspace{3pt}
 \raggedright
         #4
