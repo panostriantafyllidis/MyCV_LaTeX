@@ -26,14 +26,14 @@ jobs:
         run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
 
       - name: Upload PDF Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: MyCV.pdf
+          name: MyCV-PDF
           path: MyCV.pdf
 
   release:
+    runs-on: windows-latest
     needs: build
-    runs-on: ubuntu-latest
 
     steps:
       - name: Download PDF Artifact
