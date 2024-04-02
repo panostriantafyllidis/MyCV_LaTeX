@@ -14,13 +14,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install LaTeX and latexmk
-        run: sudo apt-get install texlive-xetex texlive-fonts-recommended latexmk texlive-science texlive-latex-extra
-
-      - name: Install Font Awesome LaTeX Package
-        run: sudo apt-get install texlive-fonts-extra
+        run: sudo apt-get install texlive-xetex latexmk
 
       - name: Compile LaTeX document
-        run: latexmk -xelatex MyCV.tex
+        run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
 
       - name: Save Job ID
         run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
@@ -29,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: pdf-artifact
-          path: "MyCV.pdf"
+          path: "MyCV.pdf" # Corrected path
 
   release:
     runs-on: ubuntu-latest
@@ -46,9 +43,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
-          body: Release v${{ github.run_number }}
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          body: Release ${{ github.sha }}
           draft: false
           prerelease: false
 
@@ -58,6 +55,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: MyCV.pdf
+          asset_path: MyCV.pdf # Corrected path
           asset_name: MyCV.pdf
           asset_content_type: application/pdf
