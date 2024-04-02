@@ -1,43 +1,24 @@
-name: LaTeX Build and Release
+name: Build and Release LaTeX Document
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch: # Manual trigger
+      - main # Adjust branch name as necessary
+  pull_request:
 
 jobs:
-  build_latex:
-    runs-on: linux-latest
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Github Action for LaTeX
-        uses: xu-cheng/latex-action@3.2.0
-        with:
-          root_file: MyCV.tex
-          compiler: xelatex
-          extra_fonts: |
-            ./fonts
-
-      - name: Compile LaTeX document
-        run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
-
-      - name: Upload PDF Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: MyCV-PDF
-          path: MyCV.pdf
+      # Steps for building the LaTeX document (same as before)...
 
   release:
-    runs-on: windows-latest
+    needs:
+      - build
+    runs-on: ubuntu-latest
     steps:
-      - name: Download PDF Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: MyCV.pdf
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Create Release
         id: create_release
@@ -51,12 +32,45 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload PDF Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf-output
+          path: main.pdf
+
+      - name: Get Job ID
+        run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
+
+      - name: Upload job.env as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: job-env
+          path: job.env
+
+      - name: Get Artifact URL
+        id: get_artifact_url
+        run: echo "::set-output name=artifact_url::$(echo "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts")"
+
+      - name: Publish Release Asset
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: MyCV.pdf
-          asset_name: MyCV.pdf
+          asset_path: main.pdf
+          asset_name: main.pdf
           asset_content_type: application/pdf
+
+      - name: Save Release URL
+        run: echo "RELEASE_URL=${{ steps.upload-release-asset.outputs.browser_download_url }}" >> job.env
+
+      - name: Upload Release URL
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-url
+          path: job.env
+
+      - name: Cleanup
+        run: |
+          rm -f job.env
