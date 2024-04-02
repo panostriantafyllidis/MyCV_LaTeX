@@ -1,31 +1,33 @@
-name: Build and Release LaTeX Document
+name: Build and Release LaTeX CV
 
 on:
   push:
     branches:
-      - main # Adjust branch name as necessary
-  pull_request:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up LaTeX environment
-        run: sudo apt-get install texlive-xetex
+        run: |
+          sudo apt-get update
+          sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-fonts-extra
 
-      - name: Compile LaTeX document
+      - name: Install siunitx LaTeX package
+        run: sudo tlmgr install siunitx
+
+      - name: Compile LaTeX CV
         run: xelatex MyCV.tex
-
-      - name: Save job ID
-        run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
 
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: pdf-output
+          name: cv
           path: MyCV.pdf
 
   release:
