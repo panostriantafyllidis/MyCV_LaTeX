@@ -14,8 +14,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up TeX Live
+      - name: LaTeX Build
         uses: xu-cheng/latex-action@v2
+        with:
+          root_file: MyCV.tex
 
       - name: Compile LaTeX document
         run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
