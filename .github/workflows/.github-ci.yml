@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_latex:
-    runs-on: windows-latest
+    runs-on: linux-latest
 
     steps:
       - name: Checkout Repository
