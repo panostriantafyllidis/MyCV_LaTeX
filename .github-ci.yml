@@ -3,7 +3,7 @@ name: LaTeX Build and Release
 on:
   push:
     branches:
-      - MyCV
+      - MyCV_LaTeX
   # Add additional triggers as needed
 
 jobs:
