@@ -1,61 +1,39 @@
-name: LaTeX Build and Release
+name: Generate CV Release
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # Manual trigger
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install MiKTeX and latexmk
-        run: |
-          choco install miktex
-          RefreshEnv.cmd
-          miktexsetup --quiet --shared=yes finish
-          mpm --install=latexmk
-
-      - name: Install required LaTeX packages
-        run: |
-          mpm --install=siunitx
-          mpm --install=fontawesome5
-          mpm --install=titlesec
-          mpm --install=l3kernel
-          mpm --install=l3packages
-          mpm --install=xcolor
-          mpm --install=lipsum
-          mpm --install=enumitem
-          mpm --install=hyperref
-          mpm --install=multicol
-          mpm --install=bookmarks
-          mpm --install=fancyhdr
-          mpm --install=translations
+      - name: Set up TeX Live
+        uses: xu-cheng/latex-action@v2
 
       - name: Compile LaTeX document
-        run: latexmk -xelatex -synctex=1 -interaction=nonstopmode MyCV.tex
-
-      - name: Save Job ID
-        run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
+        run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
 
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: pdf-artifact
-          path: "MyCV.pdf" # Corrected path
+          name: MyCV.pdf
+          path: MyCV.pdf
 
   release:
-    runs-on: windows-latest
     needs: build
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Download Job ID
+      - name: Download PDF Artifact
         uses: actions/download-artifact@v2
         with:
-          name: pdf-artifact
+          name: MyCV.pdf
 
       - name: Create Release
         id: create_release
@@ -63,9 +41,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: release-${{ github.sha }}
+          tag_name: ${{ github.sha }}
           release_name: Release ${{ github.sha }}
-          body: Release ${{ github.sha }}
+          body: Automated CV release generated from commit: ${{ github.sha }}
           draft: false
           prerelease: false
 
@@ -75,6 +53,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: MyCV.pdf # Corrected path
+          asset_path: MyCV.pdf
           asset_name: MyCV.pdf
           asset_content_type: application/pdf
