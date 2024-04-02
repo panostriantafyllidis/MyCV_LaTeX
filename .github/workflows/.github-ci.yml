@@ -20,8 +20,21 @@ jobs:
           miktexsetup --quiet --shared=yes finish
           mpm --install=latexmk
 
-      - name: Install siunitx package
-        run: mpm --install=siunitx
+      - name: Install required LaTeX packages
+        run: |
+          mpm --install=siunitx
+          mpm --install=fontawesome5
+          mpm --install=titlesec
+          mpm --install=l3kernel
+          mpm --install=l3packages
+          mpm --install=xcolor
+          mpm --install=lipsum
+          mpm --install=enumitem
+          mpm --install=hyperref
+          mpm --install=multicol
+          mpm --install=bookmarks
+          mpm --install=fancyhdr
+          mpm --install=translations
 
       - name: Compile LaTeX document
         run: latexmk -xelatex -synctex=1 -interaction=nonstopmode MyCV.tex
