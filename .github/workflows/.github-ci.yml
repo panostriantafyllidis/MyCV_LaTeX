@@ -1,29 +1,60 @@
-name: Weekly Build and Release
+name: LaTeX Build and Release
 
 on:
-  schedule:
-    - cron: "0 0 * * 0" # Every Sunday at midnight
-  workflow_dispatch: # This allows manual triggering
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Manual trigger
 
 jobs:
   build:
-    name: Build CV
-    runs-on: windows-latest
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up TeX Live on Windows
-        uses: xu-cheng/latex-action/setup-texlive@v2
-        with:
-          latex-version: "2021"
+      - name: Install LaTeX and latexmk
+        run: sudo apt-get install texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra latexmk
 
-      - name: Compile CV
+      - name: Compile LaTeX document
         run: latexmk -pdf MyCV.tex
 
-      - name: Upload PDF
+      - name: Save Job ID
+        run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
+
+      - name: Upload PDF Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: MyCV
-          path: MyCV.pdf
+          name: pdf-artifact
+          path: "MyCV.pdf" # Corrected path
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Job ID
+        uses: actions/download-artifact@v2
+        with:
+          name: pdf-artifact
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          body: Release ${{ github.sha }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: MyCV.pdf # Corrected path
+          asset_name: MyCV.pdf
+          asset_content_type: application/pdf
