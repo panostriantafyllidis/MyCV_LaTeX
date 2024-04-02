@@ -1,9 +1,10 @@
-name: Generate CV Release
+name: LaTeX Build and Release
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch: # Manual trigger
 
 jobs:
   build:
