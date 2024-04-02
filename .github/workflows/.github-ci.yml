@@ -17,7 +17,7 @@ jobs:
         run: sudo apt-get install texlive-xetex
 
       - name: Compile LaTeX document
-        run: xelatex main.tex
+        run: xelatex MyCV.tex
 
       - name: Save job ID
         run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: pdf-output
-          path: main.pdf
+          path: MyCV.pdf
 
   release:
     needs:
@@ -68,8 +68,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: main.pdf
-          asset_name: main.pdf
+          asset_path: MyCV.pdf
+          asset_name: MyCV.pdf
           asset_content_type: application/pdf
 
       - name: Save Release URL
