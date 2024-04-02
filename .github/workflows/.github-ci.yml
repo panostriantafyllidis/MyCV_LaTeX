@@ -3,6 +3,7 @@ name: Weekly Build and Release
 on:
   schedule:
     - cron: "0 0 * * 0" # Every Sunday at midnight
+  workflow_dispatch: # This allows manual triggering
 
 jobs:
   build:
