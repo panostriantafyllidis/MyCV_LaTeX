@@ -17,7 +17,7 @@ jobs:
         run: sudo apt-get install texlive-xetex latexmk
 
       - name: Compile LaTeX document
-        run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
+        run: latexmk -xelatex -synctex=1 -interaction=nonstopmode MyCV.tex
 
       - name: Save Job ID
         run: echo "JOB_ID=$GITHUB_RUN_ID" >> job.env
