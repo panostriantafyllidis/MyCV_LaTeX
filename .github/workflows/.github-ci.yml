@@ -8,13 +8,13 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Install LaTeX and latexmk
-        run: sudo apt-get install texlive-xetex texlive-fonts-recommended latexmk
+        run: sudo apt-get install texlive-xetex texlive-fonts-recommended latexmk texlive-science
 
       - name: Compile LaTeX document
         run: latexmk -xelatex MyCV.tex
