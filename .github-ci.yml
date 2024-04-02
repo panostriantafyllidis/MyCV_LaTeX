@@ -3,8 +3,8 @@ name: LaTeX Build and Release
 on:
   push:
     branches:
-      - MyCV_LaTeX
-  # Add additional triggers as needed
+      - main
+  workflow_dispatch: # Manual trigger
 
 jobs:
   build:
