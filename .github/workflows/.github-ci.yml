@@ -7,18 +7,20 @@ on:
   workflow_dispatch: # Manual trigger
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_latex:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: LaTeX Build
-        uses: xu-cheng/latex-action@v2
+      - name: Github Action for LaTeX
+        uses: xu-cheng/latex-action@3.2.0
         with:
           root_file: MyCV.tex
           compiler: xelatex
+          extra_fonts: |
+            ./path/to/custom.ttf
 
       - name: Compile LaTeX document
         run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
