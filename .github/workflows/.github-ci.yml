@@ -18,6 +18,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: MyCV.tex
+          compiler: xelatex
 
       - name: Compile LaTeX document
         run: latexmk -xelatex -interaction=nonstopmode MyCV.tex
