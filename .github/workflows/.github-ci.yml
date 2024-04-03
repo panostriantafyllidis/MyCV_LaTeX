@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -18,8 +18,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-fonts-extra
 
-      - name: Install siunitx LaTeX package
-        run: sudo tlmgr install siunitx
+      - name: Prepare LaTeX packages
+        run: |
+          mkdir -p texmf/tex/latex/siunitx
+          wget -O texmf/tex/latex/siunitx/siunitx.sty https://ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.sty
+          # Download any other required files for siunitx package if needed
+          # e.g., wget -O texmf/tex/latex/siunitx/siunitx.def https://ctan.org/tex-archive/macros/latex/contrib/siunitx/siunitx.def
 
       - name: Compile LaTeX CV
         run: xelatex MyCV.tex
