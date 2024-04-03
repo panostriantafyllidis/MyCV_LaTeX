@@ -10,9 +10,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
       - name: GH Release
         uses: softprops/action-gh-release@v2.0.4
         id: upload-release-asset
