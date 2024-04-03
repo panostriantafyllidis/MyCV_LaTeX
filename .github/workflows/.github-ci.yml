@@ -18,4 +18,5 @@ jobs:
         with:
           files: MyCV.pdf
         env:
-          GITHUB_REPOSITORY: mpanostriantafyllidis/MyCV_LaTeX
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: panostriantafyllidis/MyCV_LaTeX
