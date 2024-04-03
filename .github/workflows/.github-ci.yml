@@ -13,13 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Upload PDF as Release Asset
+      - name: GH Release
+        uses: softprops/action-gh-release@v2.0.4
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.repository.releases.url }}
-          asset_path: MyCV.pdf
-          asset_name: MyCV-${{ github.run_number }}.pdf
-          asset_content_type: application/pdf
+          files: MyCV.pdf
+        env:
+          GITHUB_REPOSITORY: mpanostriantafyllidis/MyCV_LaTeX
