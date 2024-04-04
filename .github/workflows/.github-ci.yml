@@ -6,7 +6,7 @@ on:
       - "*"
     branches:
       - main
-  workflow_dispatch: # Add manual triggering
+  workflow_dispatch: # Add manual triggering.
 
 jobs:
   release:
@@ -43,7 +43,7 @@ jobs:
         with:
           files: ${{ github.event.repository.archive_url }}
           tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
-          name: Release Source Code
+          name: Release $(date +"%Y-%m-%d") Source Code # Use current date as the release name for source code
           draft: false
           prerelease: false
         env:
