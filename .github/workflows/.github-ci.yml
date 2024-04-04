@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Get Commit Date and Time
         id: get_commit_date
-        run: _GIT_COMMIT_DATE=$(git log -1 --format=%cd --date=format:%Y%m%dh%H%M%S) && echo "::set-output name=commit_date::${_GIT_COMMIT_DATE}"
+        run: |
+          $GIT_COMMIT_DATE=git log -1 --format="%cd" --date=format:%Y%m%dh%H%M%S
+          echo "::set-output name=commit_date::${GIT_COMMIT_DATE}"
 
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
@@ -27,9 +29,9 @@ jobs:
           name: MyCV
           path: MyCV.pdf
 
-      - name: Set Date Tag
-        id: set_date_tag
-        run: echo "::set-output name=date_tag::$(date +'%Y-%m-%d')"
+      # - name: Set Date Tag
+      #   id: set_date_tag
+      #   run: echo "::set-output name=date_tag::$(date +'%Y-%m-%d')"
 
       - name: Set Release Number
         id: set_release_number
