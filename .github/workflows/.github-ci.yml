@@ -2,6 +2,8 @@ name: Generate PDF Release
 
 on:
   push:
+    tags:
+      - "*"
     branches:
       - main
   workflow_dispatch: # Add manual triggering
@@ -9,22 +11,17 @@ on:
 jobs:
   release:
     runs-on: windows-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
-      - name: Create Release Tag
-        id: create_tag
-        run: echo ::set-output name=tag::v${{ github.run_number }}
-      - name: Push Tag to GitHub
-        run: git tag ${{ steps.create_tag.outputs.tag }} && git push origin ${{ steps.create_tag.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
+      - name: GitHub Tag Name example
+        run: |
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
       - name: GH Release
         uses: softprops/action-gh-release@v2.0.4
         with:
           files: MyCV.pdf
-          tag_name: ${{ steps.create_tag.outputs.tag }} # Use the tag generated in the previous step
         env:
           GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
           GITHUB_REPOSITORY: panostriantafyllidis/MyCV_LaTeX
