@@ -31,19 +31,7 @@ jobs:
         with:
           files: MyCV.pdf
           tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
-          name: Release ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release name
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
-
-      - name: Upload Source Code
-        id: upload-release-assets-source
-        uses: softprops/action-gh-release@v2.0.4
-        with:
-          files: ${{ github.event.repository.archive_url }}
-          tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
-          name: Release $(date +"%Y-%m-%d") Source Code # Use current date as the release name for source code
+          name: Release $(date +"%Y-%m-%d") # Use current date as the release name for MyCV.pdf
           draft: false
           prerelease: false
         env:
