@@ -9,57 +9,36 @@ on:
   workflow_dispatch: # Add manual triggering
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        texlive-version: [2024] # You can specify different versions here if needed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
 
-      - name: Set up TeX Live
-        uses: xu-cheng/latex-action@3.2.0
-        with:
-          root_file: |
-            MyCV.tex
-
-      - name: Compile LaTeX document
-        run: |
-          xelatex MyCV.tex
-
-      - name: Upload PDF artifacts
+      - name: Upload MyCV.pdf
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: pdf
-          path: |
-            MyCV.pdf
-            job.env
-
-  release:
-    runs-on: windows-latest
-    needs: build
-    steps:
-      - name: Download PDF artifacts
-        uses: actions/download-artifact@v4.1.4
-        with:
-          name: pdf
-          path: build
+          name: MyCV
+          path: MyCV.pdf
 
       - name: Create Release
-        uses: ncipollo/release-action@v1.14.0
-        with:
-          name: Release ${{ github.sha }}
-          tag: release-${{ github.sha }}
-          body: "Release ${{ github.sha }}"
-          token: ${{ secrets.PATTOKEN }}
-
-      - name: Upload PDF as release asset
+        id: create_release
         uses: softprops/action-gh-release@v2.0.4
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: build/MyCV.pdf
-          name: MyCV.pdf
-          token: ${{ secrets.PATTOKEN }}
+          files: MyCV.pdf
+          tag_name: ${{ github.sha }}
+          draft: false
+          prerelease: false
         env:
-          GITHUB_REPOSITORY: panostriantafyllidis/MyCV_LaTeX
+          GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
+
+      - name: Upload Source Code
+        id: upload-release-assets-source
+        uses: softprops/action-gh-release@v2.0.4
+        with:
+          files: ${{ github.event.repository.archive_url }}
+          tag_name: ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
