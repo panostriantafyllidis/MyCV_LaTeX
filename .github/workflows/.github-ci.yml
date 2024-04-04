@@ -23,13 +23,17 @@ jobs:
           name: MyCV
           path: MyCV.pdf
 
+      - name: Set Date Tag
+        id: set_date_tag
+        run: echo "::set-output name=date_tag::$(date +'%Y-%m-%d')"
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2.0.4
         with:
           files: MyCV.pdf
-          tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
-          name: Release ${{ github.run_number }} - $(date +"%Y-%m-%d") # Use current date as part of the release name for MyCV.pdf
+          tag_name: ${{ steps.set_date_tag.outputs.date_tag }} # Use the current date as the tag name
+          name: Release ${{ github.event.repository.updated_at}} # Use current date as part of the release name for MyCV.pdf
           draft: false
           prerelease: false
         env:
