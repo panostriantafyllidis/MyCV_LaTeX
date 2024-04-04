@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        texlive-version: [full, small] # You can specify different versions here if needed
+        texlive-version: [2024] # You can specify different versions here if needed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
