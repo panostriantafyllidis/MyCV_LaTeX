@@ -15,6 +15,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
 
+      - name: Get commit information
+        id: commit_info
+        run: echo "::set-output name=commit_sha::$(git rev-parse --short HEAD)"
+
       - name: Upload MyCV.pdf
         uses: actions/upload-artifact@v4.3.1
         with:
@@ -26,7 +30,8 @@ jobs:
         uses: softprops/action-gh-release@v2.0.4
         with:
           files: MyCV.pdf
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
+          name: Release ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release name
           draft: false
           prerelease: false
         env:
@@ -37,7 +42,8 @@ jobs:
         uses: softprops/action-gh-release@v2.0.4
         with:
           files: ${{ github.event.repository.archive_url }}
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.commit_info.outputs.commit_sha }} # Use the shortened commit SHA as the release tag
+          name: Release Source Code
           draft: false
           prerelease: false
         env:
