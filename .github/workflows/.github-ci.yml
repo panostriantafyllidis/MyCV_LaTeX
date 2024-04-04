@@ -33,7 +33,7 @@ jobs:
         with:
           files: MyCV.pdf
           tag_name: ${{ steps.set_date_tag.outputs.date_tag }} # Use the current date as the tag name
-          name: Release ${{ github.event.repository.updated_at}} # Use current date as part of the release name for MyCV.pdf
+          name: Release on ${{ github.event.repository.updated_at}} # Use current date as part of the release name for MyCV.pdf
           draft: false
           prerelease: false
         env:
