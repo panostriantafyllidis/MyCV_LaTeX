@@ -26,10 +26,10 @@ jobs:
       - name: Set Date and Time Tag
         id: set_date_time_tag
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d')
-          CURRENT_TIME=$(date +'%H:%M:%S')
-          echo "::set-output name=date_tag::${CURRENT_DATE}"
-          echo "::set-output name=time_tag::${CURRENT_TIME}"
+          $CURRENT_DATE = Get-Date -Format "yyyy-MM-dd"
+          $CURRENT_TIME = Get-Date -Format "HH:mm:ss"
+          echo "::set-output name=date_tag::$CURRENT_DATE"
+          echo "::set-output name=time_tag::$CURRENT_TIME"
 
       - name: Set Release Number
         id: set_release_number
