@@ -1,4 +1,4 @@
-name: Generate PDF Release
+name: Build and Release
 
 on:
   push:
@@ -9,19 +9,57 @@ on:
   workflow_dispatch: # Add manual triggering
 
 jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        texlive-version: [full, small] # You can specify different versions here if needed
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up TeX Live
+        uses: xu-cheng/latex-action@3.2.0
+        with:
+          root_file: MyCV.tex
+          texlive_version: ${{ matrix.texlive-version }}
+
+      - name: Compile LaTeX document
+        run: |
+          xelatex MyCV.tex
+
+      - name: Upload PDF artifacts
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: pdf
+          path: |
+            MyCV.pdf
+            job.env
+
   release:
     runs-on: windows-latest
+    needs: build
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
-      - name: GitHub Tag Name example
-        run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-      - name: GH Release
-        uses: softprops/action-gh-release@v2.0.4
+      - name: Download PDF artifacts
+        uses: actions/download-artifact@v4.1.4
         with:
-          files: MyCV.pdf
+          name: pdf
+          path: build
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          name: Release ${{ github.sha }}
+          tag: release-${{ github.sha }}
+          body: "Release ${{ github.sha }}"
+          token: ${{ secrets.PATTOKEN }}
+
+      - name: Upload PDF as release asset
+        uses: softprops/action-gh-release@v2.0.4
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: build/MyCV.pdf
+          name: MyCV.pdf
+          token: ${{ secrets.PATTOKEN }}
         env:
-          GITHUB_TOKEN: ${{ secrets.PATTOKEN }}
           GITHUB_REPOSITORY: panostriantafyllidis/MyCV_LaTeX
