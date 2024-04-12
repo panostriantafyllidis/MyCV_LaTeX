@@ -108,11 +108,10 @@ jobs:
           token: ${{ secrets.PATTOKEN }}
           path: "website"
 
-      - name: Copy MyCV.pdf to the website repository
-        run: cp MyCV.pdf website/assets/docs/MyCV/MyCV.pdf
-
-      - name: Copy MyEuropassCV.pdf to the website repository
-        run: cp MyEuropassCV.pdf website/assets/docs/MyCV/MyEuropassCV.pdf
+      - name: Copy updated CVs to the website repository
+        run: |
+          cp MyCV.pdf website/assets/docs/MyCV/MyCV.pdf
+          cp MyEuropassCV.pdf website/assets/docs/MyCV/MyEuropassCV.pdf
 
       - name: Commit and push update
         run: |
